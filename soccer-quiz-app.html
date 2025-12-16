@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Soccer Trivia Quiz App</title>
+
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f9;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+
+        #quiz-container {
+            background-color: #ffffff;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 600px;
+            text-align: center;
+        }
+
+        h1 {
+            color: #1b5e20; /* Dark Green */
+            margin-bottom: 30px;
+            border-bottom: 3px solid #66bb6a;
+            padding-bottom: 10px;
+        }
+
+        .question-card {
+            margin-bottom: 25px;
+            padding: 15px;
+            background-color: #e8f5e9; /* Light Green background */
+            border-radius: 8px;
+            text-align: left;
+        }
+
+        .question-text {
+            font-size: 1.2em;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .options-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .options-list li {
+            margin: 10px 0;
+            cursor: pointer;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            transition: background-color 0.2s;
+        }
+
+        .options-list li:hover {
+            background-color: #c8e6c9; /* Lighter Green hover */
+        }
+
+        button {
+            background-color: #4CAF50; /* Green submit button */
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin-top: 20px;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #388e3c;
+        }
+
+        #results {
+            margin-top: 30px;
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #1b5e20;
+        }
+        
+        .nav-link {
+            display: block;
+            margin-top: 25px;
+            color: #007bff;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .correct {
+            background-color: #a5d6a7 !important; /* Light green for correct answer */
+            border-color: #388e3c !important;
+        }
+
+        .incorrect {
+            background-color: #ffcdd2 !important; /* Light red for incorrect answer */
+            border-color: #d32f2f !important;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="quiz-container">
+        <h1>Ultimate Soccer Trivia</h1>
+
+        <div id="quiz">
+            </div>
+
+        <button onclick="submitQuiz()">Submit Answers</button>
+
+        <div id="results"></div>
+        
+        <a href="scratch.html" class="nav-link">← Back to The Case for Fútbol</a>
+    </div>
+
+    <script>
+        // Define the quiz questions and answers
+        const quizData = [
+            {
+                question: "Which country won the first-ever FIFA World Cup in 1930?",
+                options: ["Brazil", "Uruguay", "Italy", "Germany"],
+                answer: "Uruguay"
+            },
+            {
+                question: "How many players are on the field for one team during a regulation match?",
+                options: ["10", "11", "12", "9"],
+                answer: "11"
+            },
+            {
+                question: "What is the name of the prestigious annual award given to the world's best male player?",
+                options: ["Golden Boot", "FIFA World Player", "Ballon d'Or", "The Puskás Award"],
+                answer: "Ballon d'Or"
+            },
+            {
+                question: "Which league is widely considered the highest-tier professional soccer league in England?",
+                options: ["La Liga", "Bundesliga", "Premier League", "Serie A"],
+                answer: "Premier League"
+            },
+            {
+                question: "What is the common term for a player scoring three goals in a single match?",
+                options: ["Hat-trick", "Triple score", "Treble", "Power play"],
+                answer: "Hat-trick"
+            }
+        ];
+
+        const quizDiv = document.getElementById('quiz');
+        const resultsDiv = document.getElementById('results');
+        let selectedAnswers = {}; // Object to store user's selections
+
+        // Function to build the quiz interface
+        function loadQuiz() {
+            quizData.forEach((item, index) => {
+                const questionCard = document.createElement('div');
+                questionCard.classList.add('question-card');
+                
+                // Add question text
+                questionCard.innerHTML = `<div class="question-text">${index + 1}. ${item.question}</div>`;
+                
+                // Add options list
+                const optionsList = document.createElement('ul');
+                optionsList.classList.add('options-list');
+
+                item.options.forEach(option => {
+                    const li = document.createElement('li');
+                    li.textContent = option;
+                    li.dataset.index = index; // Link option to question index
+                    li.onclick = function() { selectAnswer(li, index, option); };
+                    optionsList.appendChild(li);
+                });
+
+                questionCard.appendChild(optionsList);
+                quizDiv.appendChild(questionCard);
+            });
+        }
+
+        // Function to handle answer selection
+        function selectAnswer(selectedLi, questionIndex, answer) {
+            // Deselect any previously selected answer for this question
+            const currentOptions = document.querySelectorAll(`[data-index="${questionIndex}"]`);
+            currentOptions.forEach(li => {
+                li.style.backgroundColor = '';
+            });
+
+            // Select the new answer visually and store the selection
+            selectedLi.style.backgroundColor = '#d1e7dd'; // Visual feedback
+            selectedAnswers[questionIndex] = answer;
+        }
+
+        // Function to grade the quiz
+        function submitQuiz() {
+            let score = 0;
+
+            // Iterate over all questions
+            quizData.forEach((item, index) => {
+                const isCorrect = selectedAnswers[index] === item.answer;
+                const currentOptions = document.querySelectorAll(`[data-index="${index}"]`);
+
+                // Check if the user selected the correct answer
+                if (isCorrect) {
+                    score++;
+                }
+
+                // Provide visual feedback for all options
+                currentOptions.forEach(li => {
+                    li.classList.remove('correct', 'incorrect'); // Clear previous feedback
+
+                    if (li.textContent === item.answer) {
+                        li.classList.add('correct'); // Highlight the correct answer
+                    }
+                    
+                    if (li.textContent === selectedAnswers[index] && !isCorrect) {
+                        li.classList.add('incorrect'); // Highlight the user's incorrect choice
+                    }
+                });
+            });
+
+            // Display results
+            resultsDiv.innerHTML = `You scored ${score} out of ${quizData.length}!`;
+        }
+
+        // Load the quiz when the page loads
+        window.onload = loadQuiz;
+    </script>
+
+</body>
+</html>

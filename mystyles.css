@@ -1,0 +1,87 @@
+
+body {
+    background-color: rgb(181, 171, 60) 
+    font-family: Arial, sans-serif; 
+    color: #333; 
+    margin: 0;
+    padding: 0;
+}
+
+#header-nav {
+    background-color: #142e8c; 
+    padding: 15px;
+    text-align: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+#header-nav a {
+    color: white; 
+    margin: 0 15px;
+    font-weight: bold;
+}
+
+#header-nav a:hover {
+    color: #ffeb3b; 
+}
+
+
+#main-content {
+    max-width: 900px; 
+    margin: 40px auto;
+    padding: 20px;
+    background-color: #0a76ac;
+    border-radius: 8px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+}
+
+
+.nested-list-section ol {
+    padding-left: 20px;
+   color: #000000; 
+}
+
+
+.nested-list-section ul {
+    list-style-type: square; 
+    margin-top: 10px;
+    padding-left: 20px;
+    color: #000000; 
+
+
+.content-block {
+    margin: 30px auto;
+    text-align: center;
+}
+
+#main-image {
+    max-width: 100%;
+    height: auto;
+    border-radius: 6px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+.video-container {
+    overflow: hidden;
+    padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+    position: relative;
+    height: 0;
+}
+.video-container iframe {
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 100%;
+    position: absolute;
+}
+
+
+#footer {
+    text-align: center;
+    padding: 20px;
+    background-color: #333;
+    color: white; /* Style Definition: Font Color */
+    font-size: 0.9em;
+}
